@@ -1,14 +1,19 @@
-import React from 'react'
+import React from 'react';
 import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
+import Login from './pages/Login';
 import Singup from './pages/Singup';
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/signup",
     element: <Singup/>,
+  },
+  {
+    path: "/",
+    element: <Login/>,
   },
 ]);
 

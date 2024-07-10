@@ -1,9 +1,13 @@
 import React, { useState } from "react";
-import SignupImage from "../assets/signup.png";
-import { Link } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { Link , useNavigate } from "react-router-dom";
+import SignupImage from "../assets/signup.png";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { DNA } from 'react-loader-spinner'
 
 const Singup = () => {
+  const auth = getAuth();
+  let navigate = useNavigate()
   let [email, setEmail] = useState("");
   let [name, setName] = useState("");
   let [password, setPassword] = useState("");
@@ -11,6 +15,7 @@ const Singup = () => {
   let [nameerr, setNameerr] = useState("");
   let [passworderr, setPassworderr] = useState("");
   let [passwordshow, setPasswordshow] = useState(false);
+  let [loader, setLoader] = useState(false);
 
   let handleEmail = (e) => {
     setEmail(e.target.value);
@@ -26,8 +31,13 @@ const Singup = () => {
   };
 
   let handleSubmit = () => {
+
+
+
     if (!email) {
       setEmailerr("Email is required");
+    } else if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+      setEmailerr("Invalid Email")
     }
     if (!name) {
       setNameerr("Name is required");
@@ -35,10 +45,39 @@ const Singup = () => {
     if (!password) {
       setPassworderr("Password is required");
     }
+
+    if (email && name && password) {
+      setLoader(true)
+
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          setTimeout(() => {
+            setLoader(false)
+            navigate('/')
+     
+            const user = userCredential.user;
+            console.log(user)
+            
+          }, 2000);
+
+        })
+        .catch((error) => {
+          setTimeout(() => {
+            setLoader(false)
+            console.log(error)
+            // const errorCode = error.code;
+            // const errorMessage = error.message;
+            // ..
+            
+          }, 2000);
+        });
+
+    }
   };
 
   return (
     <div className="w-full h-screen flex">
+
       <div className="w-2/4 h-full flex justify-end items-center ">
         <div className=" mr-[69px] ">
           <h1 className=" text-[34px] font-bold text-secondary  ">
@@ -48,13 +87,13 @@ const Singup = () => {
             Free register and you can enjoy it
           </p>
           <div className=" w-[368px]  h-[80px] mt-[61px]  relative ">
-            <label className=" text-sm  font-semibold text-secondary absolute top-[-10px] left-[50px] bg-white px-2  ">
-              {" "}
+            <label className={` text-sm  font-semibold ${emailerr ? "text-red-500" : "text-secondary "} absolute top-[-10px] left-[50px] bg-white px-2  `}>
+
               Email Address
             </label>
             <input
               onChange={handleEmail}
-              className="w-full h-full  border border-secondary/50 rounded-lg  pl-[50px] "
+              className={`w-full h-full  border ${emailerr ? "border-red-500/50" : "border-secondary/50"} rounded-lg  pl-[50px]`}
               type="email"
               value={email}
               placeholder="Enter Your Email"
@@ -107,15 +146,34 @@ const Singup = () => {
             )}
           </div>
 
+          {loader ?
+          <div className="w-[368px]">
+            <DNA 
+            visible={true}
+            height="80"
+            width="80"
+            ariaLabel="dna-loading"
+            wrapperStyle={{}}
+            wrapperClass="dna-wrapper mx-auto"
+          />
+
+
+          </div>
+        :
           <button
             onClick={handleSubmit}
             className=" bg-primary w-[368px]  py-5 text-xl font-semibold text-white rounded-[86px] mt-[51px] "
           >
             Sign Up
           </button>
+        
+        }
+
+
+          
           <p className=" text-sm  text-secondary text-center w-[368px] mt-[35px] ">
             Already have an account ?{" "}
-            <Link className=" text-[#EA6C00] font-bold">Sign In</Link>
+            <Link to="/" className=" text-[#EA6C00] font-bold">Sign In</Link>
           </p>
         </div>
       </div>
