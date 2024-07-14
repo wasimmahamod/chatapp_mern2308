@@ -1,10 +1,15 @@
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import SignupImage from "../assets/signup.png";
+import SigninImage from "../assets/signin.jpg";
+import GoogleImage from "../assets/google.png";
+import { getAuth, signInWithEmailAndPassword , GoogleAuthProvider , signInWithPopup, FacebookAuthProvider  } from "firebase/auth";
 
 const Login = () => {
-  let [email, setEmail] = useState("");
+  const auth = getAuth();
+  const provider = new GoogleAuthProvider()
+  const fprovider = new FacebookAuthProvider();
+    let [email, setEmail] = useState("");
 
   let [password, setPassword] = useState("");
   let [emailerr, setEmailerr] = useState("");
@@ -25,31 +30,80 @@ const Login = () => {
   let handleSubmit = () => {
     if (!email) {
       setEmailerr("Email is required");
-    }else if(!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)){
-      setEmailerr("Invalid Email")
+    } else if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+      setEmailerr("Invalid Email");
     }
- 
+
     if (!password) {
       setPassworderr("Password is required");
     }
+
+    if (email && password) {
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          console.log(user)
+
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          
+             if(error.code.includes('auth/invalid-credential')){
+              setEmailerr("Invalid-credential")
+             }
+
+        });
+    }
   };
 
+
+  let handleGoogleLogin=()=>{
+    signInWithPopup(auth, provider)
+  .then((result) => {
+    console.log(result)
+  }).catch((error) => {
+    console.log(error)
+  });
+
+  }
+
+  let handleFacebookLogin=()=>{
+    signInWithPopup(auth, fprovider)
+    .then((result) => {
+        console.log(result)
+    })
+    .catch((error) => {
+        console.log(error)
+ 
+    });
+  }
   return (
     <div className="w-full h-screen flex">
       <div className="w-2/4 h-full flex justify-end items-center ">
         <div className=" mr-[69px] ">
           <h1 className=" text-[34px] font-bold text-secondary  ">
-          Login to your account!
+            Login to your account!
           </h1>
-          
+
+            <button onClick={handleGoogleLogin} className=" mt-5">
+              <img src={GoogleImage} alt="" />
+            </button>
+            <button onClick={handleFacebookLogin} className=" mt-5">
+              <img src={GoogleImage} alt="" />
+            </button>
           <div className=" w-[368px]  h-[80px] mt-[61px]  relative ">
-            <label className={` text-sm  font-semibold ${emailerr ? "text-red-500" :"text-secondary "} absolute top-[-10px] left-[50px] bg-white px-2  `}>
-           
+            <label
+              className={` text-sm  font-semibold ${
+                emailerr ? "text-red-500" : "text-secondary "
+              } absolute top-[-10px] left-[50px] bg-white px-2  `}
+            >
               Email Address
             </label>
             <input
               onChange={handleEmail}
-              className={`w-full h-full  border-b ${emailerr ? "border-red-500/50" :"border-secondary/50"}   pl-[50px]`}
+              className={`w-full h-full  border-b ${
+                emailerr ? "border-red-500/50" : "border-secondary/50"
+              }   pl-[50px]`}
               type="email"
               value={email}
               placeholder="Enter Your Email"
@@ -58,7 +112,7 @@ const Login = () => {
               <p className=" text-red-500 text-xl font-normal">{emailerr}</p>
             )}
           </div>
-        
+
           <div className=" w-[368px]  h-[80px] mt-[61px]  relative ">
             <label className=" text-sm  font-semibold text-secondary absolute top-[-10px] left-[50px] bg-white px-2  ">
               {" "}
@@ -95,14 +149,16 @@ const Login = () => {
           </button>
           <p className=" text-sm  text-secondary text-center w-[368px] mt-[35px] ">
             Already have an account ?{" "}
-            <Link to="/signup" className=" text-[#EA6C00] font-bold">Sign Up</Link>
+            <Link to="/signup" className=" text-[#EA6C00] font-bold">
+              Sign Up
+            </Link>
           </p>
         </div>
       </div>
       <div className="w-2/4 h-full  ">
         <img
           className="ml-auto w-full h-full object-cover"
-          src={SignupImage}
+          src={SigninImage}
           alt="SignupImage"
         />
       </div>
