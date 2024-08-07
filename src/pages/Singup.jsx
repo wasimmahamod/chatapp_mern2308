@@ -1,4 +1,8 @@
-import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  sendEmailVerification,
+} from "firebase/auth";
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
@@ -48,13 +52,15 @@ const Singup = () => {
 
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-          setTimeout(() => {
-            setLoader(false);
-            navigate("/");
+          sendEmailVerification(auth.currentUser).then(() => {
+            setTimeout(() => {
+              setLoader(false);
+              navigate("/");
 
-            const user = userCredential.user;
-            console.log(user);
-          }, 2000);
+              const user = userCredential.user;
+              console.log(user);
+            }, 2000);
+          });
         })
         .catch((error) => {
           setTimeout(() => {
@@ -62,7 +68,8 @@ const Singup = () => {
             // if(error.code.includes('auth/email-already-in-use')){
             //   setEmailerr("Email already in use ")
             // }
-            error.code.includes('auth/email-already-in-use') && setEmailerr("Email already in use ")
+            error.code.includes("auth/email-already-in-use") &&
+              setEmailerr("Email already in use ");
 
             console.log(error.code);
             // const errorCode = error.code;

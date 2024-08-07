@@ -3,13 +3,19 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import SigninImage from "../assets/signin.jpg";
 import GoogleImage from "../assets/google.png";
-import { getAuth, signInWithEmailAndPassword , GoogleAuthProvider , signInWithPopup, FacebookAuthProvider  } from "firebase/auth";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+  FacebookAuthProvider,
+} from "firebase/auth";
 
 const Login = () => {
   const auth = getAuth();
-  const provider = new GoogleAuthProvider()
+  const provider = new GoogleAuthProvider();
   const fprovider = new FacebookAuthProvider();
-    let [email, setEmail] = useState("");
+  let [email, setEmail] = useState("");
 
   let [password, setPassword] = useState("");
   let [emailerr, setEmailerr] = useState("");
@@ -42,56 +48,53 @@ const Login = () => {
       signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           const user = userCredential.user;
-          console.log(user)
-
+          console.log(user);
         })
         .catch((error) => {
           const errorCode = error.code;
-          
-             if(error.code.includes('auth/invalid-credential')){
-              setEmailerr("Invalid-credential")
-             }
 
+          if (error.code.includes("auth/invalid-credential")) {
+            setEmailerr("Invalid-credential");
+          }
         });
     }
   };
 
-
-  let handleGoogleLogin=()=>{
+  let handleGoogleLogin = () => {
     signInWithPopup(auth, provider)
-  .then((result) => {
-    console.log(result)
-  }).catch((error) => {
-    console.log(error)
-  });
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
-  }
-
-  let handleFacebookLogin=()=>{
+  let handleFacebookLogin = () => {
     signInWithPopup(auth, fprovider)
-    .then((result) => {
-        console.log(result)
-    })
-    .catch((error) => {
-        console.log(error)
- 
-    });
-  }
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   return (
-    <div className="w-full h-screen flex">
-      <div className="w-2/4 h-full flex justify-end items-center ">
-        <div className=" mr-[69px] ">
-          <h1 className=" text-[34px] font-bold text-secondary  ">
+    <div className="w-full h-screen lg:flex px-2">
+      <div className="lg:w-2/4 h-full lg:flex justify-end items-center  mt-10 lg:mt-0 ">
+        <div className=" lg:mr-[69px] ">
+          <h1 className=" text-center lg:text-left text-3xl lg:text-[34px] font-bold text-secondary  ">
             Login to your account!
           </h1>
-
+          <div className=" flex lg:block">
             <button onClick={handleGoogleLogin} className=" mt-5">
               <img src={GoogleImage} alt="" />
             </button>
-            <button onClick={handleFacebookLogin} className=" mt-5">
+            <button onClick={handleFacebookLogin} className="mt-5">
               <img src={GoogleImage} alt="" />
             </button>
-          <div className=" w-[368px]  h-[80px] mt-[61px]  relative ">
+          </div>
+          <div className=" lg:w-[368px]  h-[80px] mt-[61px]  relative ">
             <label
               className={` text-sm  font-semibold ${
                 emailerr ? "text-red-500" : "text-secondary "
@@ -113,7 +116,7 @@ const Login = () => {
             )}
           </div>
 
-          <div className=" w-[368px]  h-[80px] mt-[61px]  relative ">
+          <div className=" lg:w-[368px]  h-[80px] mt-[61px]  relative ">
             <label className=" text-sm  font-semibold text-secondary absolute top-[-10px] left-[50px] bg-white px-2  ">
               {" "}
               Password
@@ -143,7 +146,7 @@ const Login = () => {
 
           <button
             onClick={handleSubmit}
-            className=" bg-primary w-[368px]  py-5 text-xl font-semibold text-white rounded-2xl mt-[51px] "
+            className=" bg-primary w-full lg:w-[368px]  py-5 text-md lg:text-xl font-semibold text-white rounded-2xl mt-[51px] "
           >
             Login to Continue
           </button>
@@ -155,9 +158,9 @@ const Login = () => {
           </p>
         </div>
       </div>
-      <div className="w-2/4 h-full  ">
+      <div className="hidden lg:block lg:w-2/4 h-full  ">
         <img
-          className="ml-auto w-full h-full object-cover"
+          className="  ml-auto w-full h-full object-cover"
           src={SigninImage}
           alt="SignupImage"
         />
