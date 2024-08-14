@@ -1,10 +1,23 @@
 import React from "react";
+import GroupsList from "../component/GroupsList";
+import FriendList from "../component/FriendList";
 
 const Home = () => {
   return (
-    <div className=" md:bg-green-500 lg:bg-teal-800 md:text-red-500 lg:text-yellow-400">
-      home page
-    </div>
+    <section className="py-9 flex  w-full justify-around">
+      <div>
+      <GroupsList/>
+      <FriendList/>
+      </div>
+      <div>
+      <GroupsList/>
+      <FriendList/>
+      </div>
+      <div>
+      <GroupsList/>
+      <FriendList/>
+      </div>
+    </section>
   );
 };
 
