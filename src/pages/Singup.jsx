@@ -2,14 +2,17 @@ import {
   createUserWithEmailAndPassword,
   getAuth,
   sendEmailVerification,
+  updateProfile,
 } from "firebase/auth";
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import SignupImage from "../assets/signup.png";
 import { RotatingLines } from "react-loader-spinner";
+import { getDatabase, ref, set } from "firebase/database";
 
 const Singup = () => {
+  const db = getDatabase();
   const auth = getAuth();
   let navigate = useNavigate();
   let [email, setEmail] = useState("");
@@ -53,13 +56,25 @@ const Singup = () => {
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           sendEmailVerification(auth.currentUser).then(() => {
-            setTimeout(() => {
-              setLoader(false);
-              navigate("/");
-
-              const user = userCredential.user;
-              console.log(user);
-            }, 2000);
+            updateProfile(auth.currentUser, {
+              displayName: name,
+              photoURL: "/signup.png",
+            })
+              .then(() => {
+                set(ref(db, "users/" + userCredential.user.uid), {
+                  name: userCredential.user.displayName,
+                  email: userCredential.user.email,
+                  image: "/signup.png",
+                }).then(() => {
+                  setTimeout(() => {
+                    setLoader(false);
+                    navigate("/login");
+                  }, 2000);
+                });
+              })
+              .catch((error) => {
+                console.log(error);
+              });
           });
         })
         .catch((error) => {
@@ -189,7 +204,7 @@ const Singup = () => {
 
           <p className=" text-sm  text-secondary text-center w-[368px] mt-[35px] ">
             Already have an account ?{" "}
-            <Link to="/" className=" text-[#EA6C00] font-bold">
+            <Link to="/login" className=" text-[#EA6C00] font-bold">
               Sign In
             </Link>
           </p>

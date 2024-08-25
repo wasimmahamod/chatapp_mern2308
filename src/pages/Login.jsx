@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { json, Link } from "react-router-dom";
 import SigninImage from "../assets/signin.jpg";
 import GoogleImage from "../assets/google.png";
 import {
@@ -10,11 +10,14 @@ import {
   signInWithPopup,
   FacebookAuthProvider,
 } from "firebase/auth";
+import { useDispatch } from "react-redux";
+import { logedinUserInfo } from "../slices/userSlice";
 
 const Login = () => {
   const auth = getAuth();
   const provider = new GoogleAuthProvider();
   const fprovider = new FacebookAuthProvider();
+  let dispatch = useDispatch();
   let [email, setEmail] = useState("");
 
   let [password, setPassword] = useState("");
@@ -45,25 +48,29 @@ const Login = () => {
     }
 
     if (email && password) {
-      signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          const user = userCredential.user;
-          console.log(user);
-        })
-        .catch((error) => {
-          const errorCode = error.code;
+      let user = {
+        name: "mern",
+      };
+      localStorage.setItem("user", JSON.stringify(user));
+      // signInWithEmailAndPassword(auth, email, password)
+      //   .then((userCredential) => {
+      //     const user = userCredential.user;
+      //     dispatch(logedinUserInfo(user));
+      //   })
+      //   .catch((error) => {
+      //     const errorCode = error.code;
 
-          if (error.code.includes("auth/invalid-credential")) {
-            setEmailerr("Invalid-credential");
-          }
-        });
+      //     if (error.code.includes("auth/invalid-credential")) {
+      //       setEmailerr("Invalid-credential");
+      //     }
+      //   });
     }
   };
 
   let handleGoogleLogin = () => {
     signInWithPopup(auth, provider)
-      .then((result) => {
-        console.log(result);
+      .then((user) => {
+        console.log(user);
       })
       .catch((error) => {
         console.log(error);
@@ -79,6 +86,8 @@ const Login = () => {
         console.log(error);
       });
   };
+
+  
   return (
     <div className="w-full h-screen lg:flex px-2">
       <div className="lg:w-2/4 h-full lg:flex justify-end items-center  mt-10 lg:mt-0 ">

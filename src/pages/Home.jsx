@@ -3,19 +3,21 @@ import GroupsList from "../component/GroupsList";
 import FriendList from "../component/FriendList";
 
 const Home = () => {
+  let data = JSON.parse(localStorage.getItem("user"));
+  console.log(data.name);
   return (
     <section className="py-9 flex  w-full justify-around">
       <div>
-      <GroupsList/>
-      <FriendList/>
+        <GroupsList />
+        <FriendList />
       </div>
       <div>
-      <GroupsList/>
-      <FriendList/>
+        <GroupsList />
+        <FriendList />
       </div>
       <div>
-      <GroupsList/>
-      <FriendList/>
+        <GroupsList />
+        <FriendList />
       </div>
     </section>
   );
