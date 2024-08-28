@@ -65,11 +65,12 @@ const Singup = () => {
                   name: userCredential.user.displayName,
                   email: userCredential.user.email,
                   image: "/signup.png",
+                        date: `${new Date().getFullYear()}-${new Date().getMonth() + 1}- ${new Date().getDate()}-${new Date().getHours()}-${new Date().getMinutes()}-${new Date().getSeconds()}`
                 }).then(() => {
                   setTimeout(() => {
                     setLoader(false);
                     navigate("/login");
-                  }, 2000);
+                  }, 1000);
                 });
               })
               .catch((error) => {
