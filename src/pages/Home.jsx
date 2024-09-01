@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useDispatch } from "react-redux";
 import { logedinUserInfo } from "../slices/userSlice";
+import UsersList from "../component/UsersList";
 
 const Home = () => {
   let dispatch= useDispatch()
@@ -54,7 +55,7 @@ const Home = () => {
         <FriendList />
       </div>
       <div>
-        <GroupsList />
+     <UsersList/>
         <FriendList />
       </div>
     </section>
