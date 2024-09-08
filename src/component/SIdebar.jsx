@@ -10,9 +10,11 @@ import "cropperjs/dist/cropper.css";
 import { getAuth, updateProfile } from "firebase/auth";
 import { useDispatch , useSelector } from "react-redux";
 import { logedinUserInfo } from "../slices/userSlice";
+import { update , ref as dref , getDatabase } from "firebase/database";
 
 const SIdebar = () => {
   const auth = getAuth();
+  const db = getDatabase()
   let dispatch = useDispatch()
   let data = useSelector((state) => state.userInfo.value);
   const storage = getStorage();
@@ -39,10 +41,6 @@ const SIdebar = () => {
     reader.readAsDataURL(files[0]);
   }
 
-
-
-
-
   let handleSubmit = () => {
     const storageRef = ref(storage, 'some-child');
     if (typeof cropperRef.current?.cropper !== "undefined") {
@@ -54,6 +52,9 @@ const SIdebar = () => {
             photoURL: downloadURL,
           }).then(()=>{
             dispatch(logedinUserInfo(auth.currentUser))
+            update(dref(db, "users/" + data.uid), {
+              image:downloadURL
+            })
           }).then(()=>{
             setImageModal(false)
             setCropData('')
@@ -70,7 +71,8 @@ const SIdebar = () => {
       <div className=" w-[186px] h-full rounded-3xl bg-primary ">
         <div className=" text-center pt-9">
           <div className="w-[100px] h-[100px] group relative overflow-hidden  mx-auto rounded-full  ">
-            <img className=" w-full h-full  " src={data.photoURL} alt="" />
+            <img className=" w-full h-full  " src={data&& data.photoURL} alt="" />
+
 
             <div onClick={() => setImageModal(true)} className="w-full h-full cursor-pointer bg-black/50 opacity-0  group-hover:opacity-100 absolute top-0 left-0 flex justify-center items-center">
               <FaCloudUploadAlt className=" text-white text-2xl" />
@@ -78,7 +80,7 @@ const SIdebar = () => {
           </div>
         </div>
         <h2 className="text-white text-xl text-center font-bold font-nunito mt-3">
-          {data.displayName}
+          {data&& data.displayName}
         </h2>
         <div className="w-full h-[89px] relative  mt-[78px] ">
           <div className="w-[168px] h-[89px] bg-white ml-auto relative rounded-s-[20px] after:w-[10px] after:h-full after:absolute after:top-0 after:right-0 after:bg-primary   after:sh after:rounded-s-[25px] "></div>
