@@ -11,6 +11,7 @@ const UsersList = () => {
   console.log(data)
   let [userList, setUserList] = useState([]);
   let [requestList, setRequestList] = useState([]);
+  let [friendList, setFriendList] = useState([]);
   const db = getDatabase();
 
   useEffect(() => {
@@ -33,6 +34,17 @@ const UsersList = () => {
         array.push(item.val().senderid + item.val().reciverid)
       });
       setRequestList(array)
+  
+    });
+  }, []);
+  useEffect(() => {
+    const friendrequestRef = ref(db, "friendlist/");
+    onValue(friendrequestRef, (snapshot) => {
+      let array = [];
+      snapshot.forEach((item) => {
+        array.push(item.val().senderid + item.val().reciverid)
+      });
+      setFriendList(array)
   
     });
   }, []);
@@ -77,7 +89,13 @@ const UsersList = () => {
                 </p>
               </div>
             </div>
-            {requestList.includes(data.uid + item.uid) || requestList.includes(item.uid + data.uid ) ?
+            {friendList.includes(data.uid + item.uid) || friendList.includes(item.uid + data.uid ) ?
+
+            <button className=" bg-primary px-5 py-2 text-white font-normal text-[18px] rounded-lg ">
+              F
+            </button>
+            :
+            requestList.includes(data.uid + item.uid) || requestList.includes(item.uid + data.uid ) ?
             <button className=" bg-primary px-5 py-2 text-white font-normal text-[18px] rounded-lg ">
               P
             </button>

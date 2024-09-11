@@ -7,6 +7,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useDispatch } from "react-redux";
 import { logedinUserInfo } from "../slices/userSlice";
 import UsersList from "../component/UsersList";
+import FriendRequestList from "../component/FriendRequestList";
 
 const Home = () => {
   let dispatch= useDispatch()
@@ -48,15 +49,15 @@ const Home = () => {
     <section className="py-9 flex  w-full justify-around">
       <div>
         <GroupsList />
-        <FriendList />
+        <FriendRequestList />
       </div>
       <div>
-        <GroupsList />
         <FriendList />
+        <GroupsList />
       </div>
       <div>
      <UsersList/>
-        <FriendList />
+        <GroupsList />
       </div>
     </section>
     :
