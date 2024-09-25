@@ -10,6 +10,7 @@ import Singup from "./pages/Singup";
 import Home from "./pages/Home";
 import Rootlayout from "./layout/Rootlayout";
 import About from "./pages/About";
+import Message from "./pages/Message";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -18,7 +19,7 @@ const router = createBrowserRouter(
       <Route path="/signup" element={<Singup />}></Route>
       <Route path="/" element={<Rootlayout />}>
         <Route index element={<Home />}></Route>
-        <Route path="/about" element={<About />}></Route>
+        <Route path="/message" element={<Message />}></Route>
       </Route>
     </>
   )

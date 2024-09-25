@@ -14,6 +14,7 @@ const UsersList = () => {
   let [userList, setUserList] = useState([]);
   let [requestList, setRequestList] = useState([]);
   let [friendList, setFriendList] = useState([]);
+  let [searchList, setSearchList] = useState([]);
   const db = getDatabase();
 
   useEffect(() => {
@@ -75,6 +76,13 @@ const UsersList = () => {
     });
   };
 
+
+  let handleSearch=(e)=>{
+    let search = userList.filter((item)=>item.name.toLowerCase().includes(e.target.value.toLowerCase()))
+    setSearchList(search)
+  }
+
+
   return (
     <div className=" w-[427px]  shadow-xl rounded-[20px] px-5 ">
       <ToastContainer
@@ -90,14 +98,56 @@ const UsersList = () => {
         theme="light"
         transition={Bounce}
       />
+    
       {/* Same as */}
       <div className="flex  justify-between items-center">
         <h2 className=" text-[20px] font-semibold text-black ">Users List</h2>
         <BsThreeDotsVertical />
       </div>
-
+      <input onChange={handleSearch} placeholder="Search ..." className=" w-full h-[40px] px-5 border mt-3 " type="text" />
       <div className=" w-full  h-[347px] overflow-y-scroll rounded-[20px] ">
-        {userList.map((item) => (
+        {searchList.length > 0 ? 
+          searchList.map((item) => (
+            <div className=" flex justify-between items-center  border-b border-black/25 pb-6 mt-4">
+              <div className=" flex items-center gap-[14px] ">
+                <img
+                  className=" w-[70px] h-[70px] rounded-full"
+                  src={item ? item.image : SingupImage}
+                  alt=""
+                />
+                <div>
+                  <h3 className=" text-[18px] font-semibold text-black ">
+                    {item.name}
+                  </h3>
+                  <p className=" text-[14px] font-semibold text-gray-500 ">
+                    {" "}
+                    {moment(item.date, "YYYYMMDDhh:mm").fromNow()}
+                  </p>
+                </div>
+              </div>
+              {friendList.includes(data.uid + item.uid) ||
+              friendList.includes(item.uid + data.uid) ? (
+                <button className=" bg-primary px-5 py-2 text-white font-normal text-[18px] rounded-lg ">
+                  F
+                </button>
+              ) : requestList.includes(data.uid + item.uid) ||
+                requestList.includes(item.uid + data.uid) ? (
+                <button className=" bg-primary px-5 py-2 text-white font-normal text-[18px] rounded-lg ">
+                  P
+                </button>
+              ) : (
+                <button
+                  onClick={() => handleFriendrequest(item)}
+                  className=" bg-primary px-5 py-2 text-white font-normal text-[18px] rounded-lg "
+                >
+                  Add
+                </button>
+              )}
+            </div>
+          )) 
+          :
+        
+        userList.map((item) => (
           <div className=" flex justify-between items-center  border-b border-black/25 pb-6 mt-4">
             <div className=" flex items-center gap-[14px] ">
               <img

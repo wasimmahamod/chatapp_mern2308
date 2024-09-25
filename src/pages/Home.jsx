@@ -9,6 +9,7 @@ import { logedinUserInfo } from "../slices/userSlice";
 import UsersList from "../component/UsersList";
 import FriendRequestList from "../component/FriendRequestList";
 import BlockList from "../component/BlockList";
+import MyGroupsList from "../component/MyGroup";
 
 const Home = () => {
   let dispatch = useDispatch();
@@ -47,7 +48,7 @@ const Home = () => {
           </div>
           <div>
             <FriendList />
-            <GroupsList />
+            <MyGroupsList />
           </div>
           <div>
             <UsersList />
