@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Signinimg from "../assets/signin.jpg";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import {
   getDatabase,
   ref,
@@ -10,8 +10,13 @@ import {
   push,
   remove,
 } from "firebase/database";
+import { useLocation } from "react-router-dom";
+import { chatingInfo } from "../slices/chatSlice";
 
 const FriendList = () => {
+  let dispatch = useDispatch();
+  let location = useLocation();
+
   let data = useSelector((state) => state.userInfo.value);
   let [friendList, setFriendList] = useState([]);
   const db = getDatabase();
@@ -55,6 +60,15 @@ const FriendList = () => {
       });
     }
   };
+
+  let handleChat = (item) => {
+    console.log(item);
+    if (data.uid == item.senderid) {
+      dispatch(chatingInfo({ name: item.recivername, id: item.reciverid }));
+    } else {
+      dispatch(chatingInfo({ name: item.sendername, id: item.senderid }));
+    }
+  };
   return (
     <div className=" w-[427px]  shadow-xl rounded-[20px] px-5  ">
       <div className="flex  justify-between items-center">
@@ -87,12 +101,21 @@ const FriendList = () => {
                 </p>
               </div>
             </div>
-            <button
-              onClick={() => HandleBlock(item)}
-              className=" bg-primary px-5 py-2 text-white font-normal text-[18px] rounded-lg "
-            >
-              Block
-            </button>
+            {location.pathname == "/message" ? (
+              <button
+                onClick={() => handleChat(item)}
+                className=" bg-primary px-5 py-2 text-white font-normal text-[18px] rounded-lg "
+              >
+                msg
+              </button>
+            ) : (
+              <button
+                onClick={() => HandleBlock(item)}
+                className=" bg-primary px-5 py-2 text-white font-normal text-[18px] rounded-lg "
+              >
+                Block
+              </button>
+            )}
           </div>
         ))}
       </div>
